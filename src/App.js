@@ -6,7 +6,7 @@ import { Container, ColorBlock} from './App.style'
 function generateRandomColorsArray(numberOfColors) {
   const colors = [];
   for (let i = 0; i < numberOfColors; i++) {
-    colors.push(Math.floor(Math.random()*16777215).toString(16))
+    colors.push('#' + Math.floor(Math.random()*16777215).toString(16))
   }
 
   return colors;
@@ -73,8 +73,7 @@ function App() {
 
   return (
   <>
-    {/* These buttons are experimental and currently break.
-    Also, the raw blocks are not being redrawn. */}
+    {/* These buttons are experimental and currently break.*/}
 
     <button onClick={() => getNewColors()}>New colors</button>
     <button onClick={() => addNewColor()}>Add color</button>
