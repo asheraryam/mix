@@ -1,3 +1,19 @@
+
+:root {
+  --black: #202124;
+  --font-family-main: 'Jura', Helvetica, sans-serif;
+  --color-primary: #ffffff;
+  --color-accent: #EE4266;
+  --color-secondary: #000000;
+  --color-background: #202124;
+  --font-weight-light: 300;
+  --font-weight-med: 500;
+}
+
 body {
   margin: 0;
+  background-color: var(--color-background);
+  font-family: var(--font-family-main);
+  font-size: 16px;
+  font-weight: var(--font-weight-light);
 }

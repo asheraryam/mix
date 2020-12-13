@@ -4,8 +4,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  background-color: #202124;
-  flex-wrap: wrap;
 `
 const ColorBlock = styled.div.attrs(props => ({
   style: {
@@ -17,4 +15,10 @@ const ColorBlock = styled.div.attrs(props => ({
   display: flex;
 `
 
-export {Container, ColorBlock}
+const ButtonRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+`
+
+export {Container, ColorBlock, ButtonRow}

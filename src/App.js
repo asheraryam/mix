@@ -1,7 +1,13 @@
-import React, {useState} from 'react';
 import './App.css'
-import { blendThings } from './blend'
-import { Container, ColorBlock} from './App.style'
+import React, {useState} from 'react';
+import { Container } from './App.style'
+import { Button } from './components/Button'
+import { ButtonRow } from './App.style'
+import { StoryPage} from './components/StoryPage'
+
+import { drawMixedBlocks, drawRawBlocks } from './blend'
+
+import { StoryData } from './StoryData'
 
 function generateRandomColorsArray(numberOfColors) {
   const colors = [];
@@ -14,53 +20,18 @@ function generateRandomColorsArray(numberOfColors) {
 
 function App() {
   const initialColors = [
-    "#FF595E",
-    "#FFCA3A" ,
-    "#8AC926",
-    "#1982C4",
-    "#6A4C93"
+    "#f11012",
+    "#ffb626"
   ]
 
-  const [numberOfColors, setNumberOfColors] = useState(5);
+  const LAST_STORY_PAGE = 5;
+
+  const [numberOfColors, setNumberOfColors] = useState(2);
   const [colorsArray, setColorsArray] = useState(initialColors);
 
-  console.log(colorsArray);
+  const [currentStoryPage, setCurrentStoryPage] = useState(0);
+  const storyInProgress = currentStoryPage <= LAST_STORY_PAGE;
 
-  function generateCombos() {
-    let results = [];
-
-    for (let i = 0; i < numberOfColors - 1; i++) {
-      for (let j = i + 1; j < numberOfColors; j++) {
-        results.push({one: colorsArray[i], two: colorsArray[j]});
-      }
-    }
-
-    return results;
-  }
-
-  function drawRawBlocks() {
-    console.log('DRAWING RAW COLORS');
-    const blocks = [];
-  
-    for (let i = 0; i < numberOfColors; i++) {
-      blocks.push(<ColorBlock key={`rawColor-${i}`} color={colorsArray[i]} />)
-    }
-  
-    return blocks;
-  }
-
-  function drawMixedBlocks() {
-    const combos = generateCombos(numberOfColors, colorsArray);
-    const blocks = [];
-  
-    combos.forEach(combo => {
-      for (let i = 1; i <= 100; i++) {
-        blocks.push(<ColorBlock key={`color-${combo.one}-${combo.two}-${i}`} color={blendThings(combo.one, combo.two, i)} />)
-      }
-    })
-  
-    return blocks;
-  }
 
   function getNewColors() {
     const newColors = generateRandomColorsArray(numberOfColors);
@@ -69,21 +40,59 @@ function App() {
 
   function addNewColor() {
     setNumberOfColors(numberOfColors + 1);
+    const newColorsArray = [...colorsArray, generateRandomColorsArray(1).pop()];
+    setColorsArray(newColorsArray);
   }
+
+  function previousStoryPage() {
+    setCurrentStoryPage(currentStoryPage - 1);
+  }
+
+  function nextStoryPage() {
+    setCurrentStoryPage(currentStoryPage + 1);
+  }
+
+  function resetStory() {
+    setCurrentStoryPage(0)
+  }
+
+ 
 
   return (
   <>
-    {/* These buttons are experimental and currently break.*/}
 
-    <button onClick={() => getNewColors()}>New colors</button>
-    <button onClick={() => addNewColor()}>Add color</button>
+<Button onClick={() => resetStory()}>Reset</Button>
 
-    <Container>
-      {drawRawBlocks()}
-    </Container>
-    <Container>
-      {drawMixedBlocks()}
-    </Container>
+    {storyInProgress && (
+      <>
+        <ButtonRow>
+            <Button onClick={() => previousStoryPage()}>Previous</Button>
+            <Button onClick={() => nextStoryPage()}>Next</Button>
+        </ButtonRow>
+
+        <StoryPage pageNumber={currentStoryPage} 
+                   title={StoryData[currentStoryPage].title} 
+                   body={StoryData[currentStoryPage].body}
+                   colors={StoryData[currentStoryPage].colors}
+        />
+      </>
+    )}
+
+    {!storyInProgress && (
+        <>
+          <ButtonRow>
+            <Button onClick={() => getNewColors()}>Generate new colors</Button>
+            <Button onClick={() => addNewColor()}>Add new color</Button>
+          </ButtonRow>
+
+          <Container>
+            {drawRawBlocks(numberOfColors, colorsArray)}
+          </Container>
+          <Container>
+            {drawMixedBlocks(numberOfColors, colorsArray)}
+          </Container>
+        </>
+    )}
   </>
   )
 }

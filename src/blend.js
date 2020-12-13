@@ -1,15 +1,17 @@
+import { ColorBlock} from './App.style'
+
 function convertNumberToBase(number, base) {
   return `${(parseInt(number, 10).toString(base))}`;
 }
 
 function fromDecimalToHex(d) { return d.toString(16); }  // convert a decimal value to hex
 
-function convertRgbToHexCode(value1, value2, value3) {
-  const first = convertNumberToBase(value1, 16).replace('0x', '');
-  const second = convertNumberToBase(value2, 16).replace('0x', '');
-  const third = convertNumberToBase(value3, 16).replace('0x', '');
-  return `#${first}${second}${third}`
-}
+// function convertRgbToHexCode(value1, value2, value3) {
+//   const first = convertNumberToBase(value1, 16).replace('0x', '');
+//   const second = convertNumberToBase(value2, 16).replace('0x', '');
+//   const third = convertNumberToBase(value3, 16).replace('0x', '');
+//   return `#${first}${second}${third}`
+// }
 
 function fromHexToDecimal(hex) {
   return parseInt(hex, 16);
@@ -37,3 +39,40 @@ export function blendThings(color_1, color_2, weight) {
     
   return color; // PROFIT!
 };
+
+
+function generateCombos(number, array) {
+  let results = [];
+
+  for (let i = 0; i < number - 1; i++) {
+    for (let j = i + 1; j < number; j++) {
+      results.push({one: array[i], two: array[j]});
+    }
+  }
+
+  return results;
+}
+
+export function drawRawBlocks(number, array) {
+  const blocks = [];
+
+  for (let i = 0; i < number; i++) {
+    blocks.push(<ColorBlock key={`rawColor-${i}`} color={array[i]} />)
+  }
+
+  return blocks;
+}
+
+export function drawMixedBlocks(number, array) {    
+  const combos = generateCombos(number, array);
+  const blocks = [];
+
+  //TODO put a container around each combo somehow
+  combos.forEach(combo => {
+    for (let i = 1; i <= 100; i+=2) {
+      blocks.push(<ColorBlock key={`color-${combo.one}-${combo.two}-${i}`} color={blendThings(combo.one, combo.two, i)} />)
+    }
+  })
+
+  return blocks;
+}
